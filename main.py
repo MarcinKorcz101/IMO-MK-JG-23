@@ -1,12 +1,7 @@
-from utils import readTSP, calcDistanceMatrix
-from plot_results import plotResults
-import numpy as np
+from lab1.GreedyAlgorithms import GreedyAlgorithms
 
 if __name__ == '__main__':
-    coords = readTSP('kroa100.tsp')
-    distance_matrix = calcDistanceMatrix(coords)
-
-
-
-
-    # plotResults(coords)
+    ga = GreedyAlgorithms('lab1/kroa100.tsp')
+    ga.read()
+    ga.run('nearest neighbour') # specify method - one of [nearest neighbour, cycle, regret]
+    # ga.run('cycle')
