@@ -7,11 +7,12 @@ class Node:
         self.y = y
 
 class GreedyAlgorithms:
-    def __init__(self, instance):
+    def __init__(self, instance, show_plot = True):
         self.instance = instance # instance file name
         self.distance_matrix = None
         self.N = 0 # number of nodes
         self.nodes, self.first_cycle, self.second_cycle = [], [], []
+        self.show_plot = show_plot
 
     def read(self):
         with open(self.instance, "r") as file:
@@ -81,9 +82,10 @@ class GreedyAlgorithms:
                 if distance > max_distance:
                     max_distance = distance
                     b = node
-                    
+        
         self.first_cycle = [a]
         self.second_cycle = [b]
+        return a, b
 
     def choose_k_nodes(self, cycle, node, k):
         distances = []
@@ -111,6 +113,26 @@ class GreedyAlgorithms:
 
                 if distances[0] < min_distance:
                     min_distance = distances[0]
+                    new_node = n
+                    new_position = position
+
+        return new_node, new_position
+    
+    def nearest_regret_node(self, node, nodes_in_cycles, cycle):
+        new_node = None
+        min_distance = np.Inf
+
+        for n in range(self.N):
+            if n != node and n not in nodes_in_cycles:
+                distance, position = self.choose_k_nodes(cycle, n, 2)
+
+                if len(cycle) > 1:
+                    distance = (distance[0] - 0.4 * distance[1])
+                else:
+                    distance = distance[0]
+
+                if distance < min_distance:
+                    min_distance = distance
                     new_node = n
                     new_position = position
 
@@ -171,8 +193,10 @@ class GreedyAlgorithms:
             nodes_in_cycles.append(first_nearest_node)
             self.add_to_cycle(first_nearest_node, 1)
 
-        self.plot_result("Cycles created with the Nearest Neighbor approach")
-        print('Total length of both cycles: {}'.format(self.calc_cycle_length(self.first_cycle) + self.calc_cycle_length(self.second_cycle)))
+        if self.show_plot: self.plot_result("Cycles created with the Nearest Neighbor approach")
+        total_distance = self.calc_cycle_length(self.first_cycle) + self.calc_cycle_length(self.second_cycle)
+        # print('Total length of both cycles: {}'.format(total_distance))
+        return total_distance
 
     def cycle_greedy(self, nodes_in_cycles, last_first_nearest_node, last_second_nearest_node):
         for _ in range(int(self.N / 2) - 1):
@@ -192,21 +216,43 @@ class GreedyAlgorithms:
             nodes_in_cycles.append(first_nearest_node)
             self.add_to_cycle(first_nearest_node, 1)
 
-        self.plot_result("Cycles created with the Greedy Cycle approach")
-        print('Total length of both cycles: {}'.format(self.calc_cycle_length(self.first_cycle) + self.calc_cycle_length(self.second_cycle)))
+        if self.show_plot: self.plot_result("Cycles created with the Greedy Cycle approach")
+        total_distance = self.calc_cycle_length(self.first_cycle) + self.calc_cycle_length(self.second_cycle)
+        # print('Total length of both cycles: {}'.format(total_distance))
+        return total_distance
 
-    def regret_greedy():
-        pass
+    def regret_greedy(self, nodes_in_cycles, last_first_nearest_node, last_second_nearest_node):
+        for _ in range(int(self.N / 2) - 1):
+            first_nearest_node, ins = self.nearest_regret_node(last_first_nearest_node, nodes_in_cycles, self.first_cycle)
+            self.first_cycle.insert(ins, first_nearest_node)
+            nodes_in_cycles.append(first_nearest_node)
+
+            second_nearest_node, ins2 = self.nearest_regret_node(last_second_nearest_node, nodes_in_cycles, self.second_cycle)
+            self.second_cycle.insert(ins2, second_nearest_node)
+            nodes_in_cycles.append(second_nearest_node)
+
+            last_first_nearest_node = first_nearest_node
+            last_second_nearest_node = second_nearest_node
+
+        if self.N % 2 == 1:
+            first_nearest_node = self.nearest_node(last_first_nearest_node, nodes_in_cycles)
+            nodes_in_cycles.append(first_nearest_node)
+            self.add_to_cycle(first_nearest_node, 1)
+
+        if self.show_plot: self.plot_result("Cycles created with the Greedy Cycle approach")
+        total_distance = self.calc_cycle_length(self.first_cycle) + self.calc_cycle_length(self.second_cycle)
+        # print('Total length of both cycles: {}'.format(total_distance))
+        return total_distance
 
     def run(self, method):
-        self.choose_nodes()
+        a, b = self.choose_nodes()
         last_first_nearest_node = self.first_cycle[0]
         last_second_nearest_node = self.second_cycle[0]
         nodes_in_cycles = [last_first_nearest_node, last_second_nearest_node]
 
-        if method in ['nearest neighbour']: self.nn_greedy(nodes_in_cycles, last_first_nearest_node, last_second_nearest_node)
-        elif method in ['cycle']: self.cycle_greedy(nodes_in_cycles, last_first_nearest_node, last_second_nearest_node)
-        elif method in ['regret']: self.regret_greedy()
+        if method in ['nearest neighbour']: return self.nn_greedy(nodes_in_cycles, last_first_nearest_node, last_second_nearest_node), a, b
+        elif method in ['cycle']: return self.cycle_greedy(nodes_in_cycles, last_first_nearest_node, last_second_nearest_node), a, b
+        elif method in ['regret']: return self.regret_greedy(nodes_in_cycles, last_first_nearest_node, last_second_nearest_node), a, b
         else:
             print("Method not supported")
             return
