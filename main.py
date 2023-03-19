@@ -28,9 +28,9 @@ def computational_experiment():
         json.dump(results, f)
 
 if __name__ == '__main__':
-    # ga = GreedyAlgorithms('lab1/kroa100.tsp', show_plot = True)
-    # ga.read()
-    # ga.run('nearest neighbour') # specify method - one of [nearest neighbour, cycle, regret]
+    ga = GreedyAlgorithms('lab1/krob100.tsp', show_plot = True)
+    ga.read()
+    ga.run('nearest neighbour') # specify method - one of [nearest neighbour, cycle, regret]
     # ga.run('cycle')
     # ga.run('regret')
-    computational_experiment()
+    # computational_experiment()
