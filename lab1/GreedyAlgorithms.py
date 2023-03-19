@@ -46,8 +46,8 @@ class GreedyAlgorithms:
         x, y, first_cycle_x, first_cycle_y, second_cycle_x, second_cycle_y = self.prepare_plot_data()
         fig, ax = plt.subplots()
         ax.scatter(x, y, color='black')
-        ax.set_xlabel("X coordisntes")
-        ax.set_ylabel("Y coordisntes")
+        ax.set_xlabel("X coordinates")
+        ax.set_ylabel("Y coordinates")
         ax.plot(first_cycle_x, first_cycle_y, 'blue')
         ax.plot(second_cycle_x, second_cycle_y, 'red')
         ax.set_title(title)
@@ -193,7 +193,7 @@ class GreedyAlgorithms:
             nodes_in_cycles.append(first_nearest_node)
             self.add_to_cycle(first_nearest_node, 1)
 
-        if self.show_plot: self.plot_result("Cycles created with the Nearest Neighbor approach")
+        if self.show_plot: self.plot_result("Cycles created with the Nearest Neighbor approach for krob100 instance")
         total_distance = self.calc_cycle_length(self.first_cycle) + self.calc_cycle_length(self.second_cycle)
         # print('Total length of both cycles: {}'.format(total_distance))
         return total_distance
@@ -216,7 +216,7 @@ class GreedyAlgorithms:
             nodes_in_cycles.append(first_nearest_node)
             self.add_to_cycle(first_nearest_node, 1)
 
-        if self.show_plot: self.plot_result("Cycles created with the Greedy Cycle approach")
+        if self.show_plot: self.plot_result("Cycles created with the Greedy Cycle approach for krob100 instance")
         total_distance = self.calc_cycle_length(self.first_cycle) + self.calc_cycle_length(self.second_cycle)
         # print('Total length of both cycles: {}'.format(total_distance))
         return total_distance
@@ -239,7 +239,7 @@ class GreedyAlgorithms:
             nodes_in_cycles.append(first_nearest_node)
             self.add_to_cycle(first_nearest_node, 1)
 
-        if self.show_plot: self.plot_result("Cycles created with the Greedy Cycle approach")
+        if self.show_plot: self.plot_result("Cycles created with the Two Regret approach for krob100 instance")
         total_distance = self.calc_cycle_length(self.first_cycle) + self.calc_cycle_length(self.second_cycle)
         # print('Total length of both cycles: {}'.format(total_distance))
         return total_distance
