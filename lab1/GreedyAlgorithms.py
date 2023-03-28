@@ -82,7 +82,8 @@ class GreedyAlgorithms:
                 if distance > max_distance:
                     max_distance = distance
                     b = node
-        
+                    
+        # a, b = 13, 66
         self.first_cycle = [a]
         self.second_cycle = [b]
         return a, b
@@ -139,20 +140,15 @@ class GreedyAlgorithms:
         return new_node, new_position
 
     def nearest_node(self, node, used_nodes):
-        nearest_node, min_distance = None, None
+        nearest_node, min_distance = None, np.Inf
         
         for n in range(self.N):
             if n != node and n not in used_nodes:
-                
-                if min_distance is None:
-                    min_distance = self.distance_matrix[node][n]
-                    nearest_node = n
-                else:
-                    distance = self.distance_matrix[node][n]
+                distance = self.distance_matrix[node][n]
 
-                    if distance < min_distance:
-                        nearest_node = n
-                        min_distance = distance
+                if distance < min_distance:
+                    nearest_node = n
+                    min_distance = distance
 
         return nearest_node
 
@@ -241,7 +237,7 @@ class GreedyAlgorithms:
 
         if self.show_plot: self.plot_result("Cycles created with the Two Regret approach for krob100 instance")
         total_distance = self.calc_cycle_length(self.first_cycle) + self.calc_cycle_length(self.second_cycle)
-        # print('Total length of both cycles: {}'.format(total_distance))
+        print('Total length of both cycles: {}'.format(total_distance))
         return total_distance
 
     def run(self, method):
