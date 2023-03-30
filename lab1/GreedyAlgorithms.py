@@ -61,6 +61,8 @@ class GreedyAlgorithms:
                 d = np.sqrt((self.nodes[i].x - self.nodes[j].x) ** 2 + (self.nodes[i].y - self.nodes[j].y) ** 2)
                 self.distance_matrix[i][j] = self.distance_matrix[j][i] = np.round(d)
 
+        print(self.distance_matrix)
+
     def calc_cycle_length(self, cycle):
         cyc_len = 0.0
 
