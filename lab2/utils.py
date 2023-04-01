@@ -31,7 +31,7 @@ def read_best_solutions(name):
 
 def prepare_plot_data(cycle1, cycle2, nodes):
     x = [nodes[i][0] for i in range(len(nodes))]
-    y = [nodes[i][0] for i in range(len(nodes))]
+    y = [nodes[i][1] for i in range(len(nodes))]
 
     first_cycle_x = [nodes[i][0] for i in cycle1]
     first_cycle_y = [nodes[i][1] for i in cycle1]
