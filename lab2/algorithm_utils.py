@@ -14,6 +14,9 @@ def calc_cycle_length(distance_matrix, cycle):
 
     return cyc_len
 
+def calc_cycles_length(distance_matrix, cycles):
+    return calc_cycle_length(distance_matrix, cycles[0]) + calc_cycle_length(distance_matrix, cycles[1])
+
 def get_node_pair(cycle, action):
     possibilities = []
     for node1 in range(len(cycle)):
@@ -59,7 +62,7 @@ def delta_between_cycles_node_exchange(distance_matrix, cycles, nodes):
     first, second = nodes[0], nodes[1]
     before_first, after_first = find_neighbour(cycles[0], first)
     before_second, after_second = find_neighbour(cycles[1], second)
-    print(before_first, first, after_first, "|||", before_second, second, after_second)
+    # print(before_first, first, after_first, "|||", before_second, second, after_second)
 
     first_delta = distance_matrix[before_second][first] + distance_matrix[first][after_second] - distance_matrix[before_first][first] - distance_matrix[first][after_first]
     second_delta = distance_matrix[before_first][second] + distance_matrix[second][after_first] - distance_matrix[before_second][second] - distance_matrix[second][after_second]
@@ -94,7 +97,7 @@ def exchange_edge_in_cycle(cycle, edges):
 
 def greedy_one_epoch(cycles, distance_matrix, method):
     for cycle_idx, cycle in enumerate(cycles):
-        cycle_length = calc_cycle_length(distance_matrix, cycle)
+        # cycle_length = calc_cycle_length(distance_matrix, cycle)
 
         possibilities = get_node_pair(cycle, method)
         possibilities.extend(get_between_cycles_node_pair(cycles, delta_between_cycles_node_exchange))
@@ -105,49 +108,64 @@ def greedy_one_epoch(cycles, distance_matrix, method):
         for nodes, action in possibilities:
             if action == delta_inside_cycle_node_exchange:
                 delta = delta_inside_cycle_node_exchange(distance_matrix, cycle, nodes)
+            elif action == delta_inside_cycle_edge_exchange:
+                delta = delta_inside_cycle_edge_exchange(distance_matrix, cycle, nodes)
             elif action == delta_between_cycles_node_exchange:
                 delta = delta_between_cycles_node_exchange(distance_matrix, cycles, nodes)
-
-
+            
             if delta < 0:
-                if action == delta_inside_cycle_node_exchange:
+                if action == delta_inside_cycle_node_exchange or action == delta_inside_cycle_edge_exchange:
                     new_cycle = exchange_nodes_in_cycle(cycle, nodes)
+                    cycles[cycle_idx] = new_cycle
                 elif action == delta_between_cycles_node_exchange:
-                    new_cycle = exchange_nodes_between_cycles(cycles, nodes)
+                    new_cycles = exchange_nodes_between_cycles(cycles, nodes)
+                    cycles = new_cycles
                 else:
-                    print("Fatal error")
-                cycle_length = cycle_length + delta
+                    ValueError("Fatal error")
+                # cycle_length = cycle_length + delta
                 break
 
-        cycles[cycle_idx] = new_cycle
     return cycles
 
 def steepest_one_epoch(cycles, distance_matrix, method):
     for cycle_idx, cycle in enumerate(cycles):
-        cycle_length = calc_cycle_length(distance_matrix, cycle)
+        # cycle_length = calc_cycle_length(distance_matrix, cycle)
 
         possibilities = get_node_pair(cycle, method)
-        possibilities.extend(get_between_cycles_node_pair(cycle, delta_between_cycles_node_exchange))
+        possibilities.extend(get_between_cycles_node_pair(cycles, delta_between_cycles_node_exchange))
 
-        np.random.seed()
-        np.random.shuffle(possibilities)
+        # np.random.seed()
+        # np.random.shuffle(possibilities)
         
         best_delta = 0
+        single_cycle = True
         for nodes, action in possibilities:
-            delta = action(distance_matrix, cycle, nodes)
+            if action == delta_inside_cycle_node_exchange:
+                delta = delta_inside_cycle_node_exchange(distance_matrix, cycle, nodes)
+            elif action == delta_inside_cycle_edge_exchange:
+                delta = delta_inside_cycle_edge_exchange(distance_matrix, cycle, nodes)
+            elif action == delta_between_cycles_node_exchange:
+                delta = delta_between_cycles_node_exchange(distance_matrix, cycles, nodes)
+            
             if delta < best_delta:
                 best_delta = delta
 
-                if isinstance(action, delta_inside_cycle_node_exchange):
+                if action == delta_inside_cycle_node_exchange or action == delta_inside_cycle_edge_exchange:
                     new_cycle = exchange_nodes_in_cycle(cycle, nodes)
-                elif isinstance(action, delta_between_cycles_node_exchange):
-                    new_cycle = exchange_nodes_between_cycles(cycle, nodes)
+                    single_cycle = True
+                    curr_idx = cycle_idx
+                elif action == delta_between_cycles_node_exchange:
+                    new_cycles = exchange_nodes_between_cycles(cycles, nodes)
+                    single_cycle = False
                 else:
-                    print("Fatal error")
+                    # print("Fatal error")
+                    ValueError("Fatal error")
 
-                cycle_length = cycle_length + delta
-
-        cycles[cycle_idx] = new_cycle
+                # cycle_length = cycle_length + delta
+        if single_cycle and curr_idx == cycle_idx:
+            cycles[cycle_idx] = new_cycle
+        else:
+            cycles = new_cycles
 
     return cycles
         
