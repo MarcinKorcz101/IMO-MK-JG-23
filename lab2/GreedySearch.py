@@ -1,4 +1,4 @@
-from utils import read_file, read_best_solutions
+from utils import read_file, read_best_solutions, plot_result
 from algorithm_utils import *
 
 def greedy_local_search():
@@ -7,13 +7,19 @@ def greedy_local_search():
     random_first_cycle, random_second_cycle = make_random_solution(nodes)
     regret_solutions = read_best_solutions('best_solutions.json')
     cycles = [regret_solutions[instance]['first_cycle'], regret_solutions[instance]['second_cycle']]
-    running = True
+    # moves = [inside_cycle_node_exchange, between_cycle_node_exchange]
+    # moves = [inside_cycle_edge_exchange, between_cycle_node_exchange]
+    
+    print("before greedy 1", calc_cycle_length(distance_matrix, cycles[0]))
+    print("before greedy 2", calc_cycle_length(distance_matrix, cycles[1]))
+    # plot_result("aa", cycles[0], cycles[1], nodes)
+    for _ in range(100):
+        greedy_one_epoch(cycles, distance_matrix, delta_inside_cycle_node_exchange)
 
-    while running:
-        running = False
-        new_cycles = inside_cycle_node_exchange(cycles, distance_matrix)
+    print("after greedy 1", calc_cycle_length(distance_matrix, cycles[0]))
+    print("adter greedy 2", calc_cycle_length(distance_matrix, cycles[1]))
+    # plot_result("bb", cycles[0], cycles[1], nodes)
 
-        if new_cycles == cycles:
-            # no imporvement
-            new_cycles = inside_cycle_edge_exchange(cycles, distance_matrix)
-            if new_cycles == cycles: break
+
+if __name__ == '__main__':
+    greedy_local_search()

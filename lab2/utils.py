@@ -33,23 +33,15 @@ def prepare_plot_data(cycle1, cycle2, nodes):
     x = [nodes[i][0] for i in range(len(nodes))]
     y = [nodes[i][0] for i in range(len(nodes))]
 
-    first_cycle_x = [i for i in cycle1]
-    first_cycle_y = [nodes[i][1] for i in range(len(cycle1))]
-    first_cycle_x.append(cycle1[0])
-
-    first_cycle_y = [self.nodes[node].y for node in self.first_cycle]
-    first_cycle_x.append(self.nodes[self.first_cycle[0]].x)
-    first_cycle_y.append(self.nodes[self.first_cycle[0]].y)
-
-    second_cycle_x = [self.nodes[node].x for node in self.second_cycle]
-    second_cycle_y = [self.nodes[node].y for node in self.second_cycle]
-    second_cycle_x.append(self.nodes[self.second_cycle[0]].x)
-    second_cycle_y.append(self.nodes[self.second_cycle[0]].y)
+    first_cycle_x = [nodes[i][0] for i in cycle1]
+    first_cycle_y = [nodes[i][1] for i in cycle1]
+    second_cycle_x = [nodes[i][0] for i in cycle2]
+    second_cycle_y = [nodes[i][1] for i in cycle2]
 
     return x, y, first_cycle_x, first_cycle_y, second_cycle_x, second_cycle_y
 
-def plot_result(title):
-    x, y, first_cycle_x, first_cycle_y, second_cycle_x, second_cycle_y = prepare_plot_data()
+def plot_result(title, cycle1, cycle2, nodes):
+    x, y, first_cycle_x, first_cycle_y, second_cycle_x, second_cycle_y = prepare_plot_data(cycle1, cycle2, nodes)
     fig, ax = plt.subplots()
     ax.scatter(x, y, color='black')
     ax.set_xlabel("X coordinates")
