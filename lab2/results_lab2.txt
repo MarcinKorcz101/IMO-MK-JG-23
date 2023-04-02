@@ -1,0 +1,32 @@
+random_starting_solution	Greedy	edge	kroa100.tsp	 = 28069.19 (26002.0-31030.0) | 0.930 (0.792-1.083)
+random_starting_solution	Greedy	edge	krob100.tsp	 = 28614.95 (26373.0-31517.0) | 0.957 (0.801-1.187)
+random_starting_solution	Greedy	node	kroa100.tsp	 = 41003.15 (30428.0-52024.0) | 0.997 (0.691-1.280)
+random_starting_solution	Greedy	node	krob100.tsp	 = 41168.73 (33226.0-49931.0) | 1.065 (0.801-1.902)
+
+random_starting_solution	Steepest	edge	kroa100.tsp	 = 27847.43 (25697.0-30520.0) | 1.240 (1.016-1.509)
+random_starting_solution	Steepest	edge	krob100.tsp	 = 28562.6 (25869.0-31586.0) | 1.238 (1.072-1.523)
+random_starting_solution	Steepest	node	kroa100.tsp	 = 42740.22 (31775.0-50935.0) | 1.505 (1.163-2.001)
+random_starting_solution	Steepest	node	krob100.tsp	 = 42530.78 (35363.0-50631.0) | 1.516 (1.146-2.163)
+
+regret_starting_solution	Greedy	edge	kroa100.tsp	 = 23941.65 (23031.0-24155.0) | 0.039 (0.027-0.103)
+regret_starting_solution	Greedy	edge	krob100.tsp	 = 24027.71 (23787.0-24316.0) | 0.116 (0.080-0.182)
+regret_starting_solution	Greedy	node	kroa100.tsp	 = 23601.0 (23601.0-23601.0) | 0.069 (0.048-0.103)
+regret_starting_solution	Greedy	node	krob100.tsp	 = 24896.11 (24843.0-24956.0) | 0.078 (0.051-0.139)
+
+regret_starting_solution	Steepest	edge	kroa100.tsp	 = 24155.0 (24155.0-24155.0) | 0.038 (0.032-0.059)
+regret_starting_solution	Steepest	edge	krob100.tsp	 = 24089.0 (24089.0-24089.0) | 0.189 (0.155-0.291)
+regret_starting_solution	Steepest	node	kroa100.tsp	 = 23601.0 (23601.0-23601.0) | 0.088 (0.076-0.136)
+regret_starting_solution	Steepest	node	krob100.tsp	 = 24956.0 (24956.0-24956.0) | 0.099 (0.084-0.124)
+
+
+
+
+random_starting_solution	Random_walk	edge	kroa100.tsp	 = 170191.17 (148488.0-187360.0) | 2.168 (2.163-2.209)
+random_starting_solution	Random_walk	edge	krob100.tsp	 = 168626.83 (149569.0-187613.0) | 2.166 (2.163-2.177)
+random_starting_solution	Random_walk	node	kroa100.tsp	 = 171961.17 (151702.0-204551.0) | 2.166 (2.163-2.179)
+random_starting_solution	Random_walk	node	krob100.tsp	 = 167733.18 (152200.0-186856.0) | 2.167 (2.163-2.177)
+
+regret_starting_solution	Random_walk	edge	kroa100.tsp	 = 175129.02 (154594.0-193628.0) | 2.167 (2.163-2.179)
+regret_starting_solution	Random_walk	edge	krob100.tsp	 = 168591.38 (151962.0-184576.0) | 2.166 (2.163-2.179)
+regret_starting_solution	Random_walk	node	kroa100.tsp	 = 175025.45 (156679.0-197680.0) | 2.167 (2.163-2.180)
+regret_starting_solution	Random_walk	node	krob100.tsp	 = 168464.05 (148543.0-190526.0) | 2.167 (2.163-2.179)

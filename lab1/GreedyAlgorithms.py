@@ -61,6 +61,8 @@ class GreedyAlgorithms:
                 d = np.sqrt((self.nodes[i].x - self.nodes[j].x) ** 2 + (self.nodes[i].y - self.nodes[j].y) ** 2)
                 self.distance_matrix[i][j] = self.distance_matrix[j][i] = np.round(d)
 
+        print(self.distance_matrix)
+
     def calc_cycle_length(self, cycle):
         cyc_len = 0.0
 
@@ -83,7 +85,7 @@ class GreedyAlgorithms:
                     max_distance = distance
                     b = node
                     
-        # a, b = 13, 66
+        a, b = 84, 69
         self.first_cycle = [a]
         self.second_cycle = [b]
         return a, b
@@ -238,6 +240,8 @@ class GreedyAlgorithms:
         if self.show_plot: self.plot_result("Cycles created with the Two Regret approach for krob100 instance")
         total_distance = self.calc_cycle_length(self.first_cycle) + self.calc_cycle_length(self.second_cycle)
         print('Total length of both cycles: {}'.format(total_distance))
+        # print("I", self.first_cycle.append(self.first_cycle[0]))
+        # print("II", self.second_cycle.append(self.second_cycle[0]))
         return total_distance
 
     def run(self, method):
