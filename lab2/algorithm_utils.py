@@ -3,7 +3,7 @@ import copy
 
 def make_random_solution(n):
     nodes = np.arange(n)
-    print(len(nodes))
+    # print(len(nodes))
     nodes = np.random.permutation(nodes).tolist()
     half = len(nodes) // 2
     return [nodes[:half], nodes[half:]]
@@ -172,6 +172,40 @@ def steepest_one_epoch(cycles, distance_matrix, method):
                 single_cycle = False
             else:
                 ValueError("Fatal error")
+
+    if single_cycle == True:
+        cycles[best_cycle_idx] = new_cycle
+    elif single_cycle == False:
+        cycles = new_cycles
+
+    return cycles
+
+def random_one_epoch(cycles, distance_matrix, method):
+    possibilities = get_node_pair(cycles, method)
+    possibilities.extend(get_between_cycles_node_pair(cycles, delta_between_cycles_node_exchange))
+    
+    best_cycle_idx = 0
+    single_cycle = None
+    
+    np.random.seed()
+    np.random.shuffle(possibilities)
+    
+    for nodes, action, cycle_idx in possibilities:
+        if action == delta_inside_cycle_node_exchange:
+            new_cycle = exchange_nodes_in_cycle(cycles[cycle_idx], nodes)
+            single_cycle = True
+            best_cycle_idx = cycle_idx
+        elif action == delta_inside_cycle_edge_exchange:
+            new_cycle = exchange_edge_in_cycle(cycles[cycle_idx], nodes)
+            single_cycle = True
+            best_cycle_idx = cycle_idx
+        elif action == delta_between_cycles_node_exchange:
+            new_cycles = exchange_nodes_between_cycles(cycles, nodes)
+            single_cycle = False
+        else:
+            ValueError("Fatal error")
+
+        break
 
     if single_cycle == True:
         cycles[best_cycle_idx] = new_cycle
