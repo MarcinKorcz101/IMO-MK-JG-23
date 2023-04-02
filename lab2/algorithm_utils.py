@@ -114,6 +114,8 @@ def greedy_one_epoch(cycles, distance_matrix, method):
     np.random.seed()
     np.random.shuffle(possibilities)
 
+    delta = 0
+
     for nodes, action, cycle_idx in possibilities:
         if action == delta_inside_cycle_node_exchange:
             delta = delta_inside_cycle_node_exchange(distance_matrix, cycles[cycle_idx], nodes)
@@ -157,7 +159,6 @@ def steepest_one_epoch(cycles, distance_matrix, method):
         
         if delta < best_delta:
             best_delta = delta
-            
             if action == delta_inside_cycle_node_exchange:
                 new_cycle = exchange_nodes_in_cycle(cycles[cycle_idx], nodes)
                 single_cycle = True
@@ -171,53 +172,6 @@ def steepest_one_epoch(cycles, distance_matrix, method):
                 single_cycle = False
             else:
                 ValueError("Fatal error")
-
-    if single_cycle == True:
-        cycles[best_cycle_idx] = new_cycle
-    elif single_cycle == False:
-        cycles = new_cycles
-
-    return cycles
-
-def random_one_epoch(cycles, distance_matrix, method):
-    possibilities = get_node_pair(cycles, method)
-    possibilities.extend(get_between_cycles_node_pair(cycles, delta_between_cycles_node_exchange))
-    
-    best_delta = 0
-    best_cycle_idx = 0
-    single_cycle = None
-    
-    np.random.seed()
-    np.random.shuffle(possibilities)
-
-    for nodes, action, cycle_idx in possibilities:
-        print("jestem")
-        # if action == delta_inside_cycle_node_exchange:
-        #     delta = delta_inside_cycle_node_exchange(distance_matrix, cycles[cycle_idx], nodes)
-        # elif action == delta_inside_cycle_edge_exchange:
-        #     delta = delta_inside_cycle_edge_exchange(distance_matrix, cycles[cycle_idx], nodes)
-        # elif action == delta_between_cycles_node_exchange:
-        #     delta = delta_between_cycles_node_exchange(distance_matrix, cycles, nodes)
-        
-        # if delta < best_delta:
-        #     best_delta = delta
-
-        if action == delta_inside_cycle_node_exchange:
-            new_cycle = exchange_nodes_in_cycle(cycles[cycle_idx], nodes)
-            single_cycle = True
-            best_cycle_idx = cycle_idx
-        elif action == delta_inside_cycle_edge_exchange:
-            new_cycle = exchange_edge_in_cycle(cycles[cycle_idx], nodes)
-            single_cycle = True
-            best_cycle_idx = cycle_idx
-        elif action == delta_between_cycles_node_exchange:
-            new_cycles = exchange_nodes_between_cycles(cycles, nodes)
-            single_cycle = False
-        else:
-            ValueError("Fatal error")
-            # break
-
-        break
 
     if single_cycle == True:
         cycles[best_cycle_idx] = new_cycle

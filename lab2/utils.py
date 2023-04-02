@@ -54,3 +54,16 @@ def plot_result(title, cycle1, cycle2, nodes):
     ax.plot(second_cycle_x, second_cycle_y, 'red')
     ax.set_title(title)
     plt.show()
+
+
+def save_result(title, cycle1, cycle2, nodes):
+    x, y, first_cycle_x, first_cycle_y, second_cycle_x, second_cycle_y = prepare_plot_data(cycle1, cycle2, nodes)
+    fig, ax = plt.subplots()
+    ax.scatter(x, y, color='black')
+    ax.set_xlabel("X coordinates")
+    ax.set_ylabel("Y coordinates")
+    ax.plot(first_cycle_x, first_cycle_y, 'blue')
+    ax.plot(second_cycle_x, second_cycle_y, 'red')
+    ax.set_title(title)
+    # plt.show()
+    plt.savefig(f"plots/{title}.png")
