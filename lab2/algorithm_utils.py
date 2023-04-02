@@ -89,6 +89,7 @@ def exchange_nodes_in_cycle(cycle, nodes):
 
 def exchange_nodes_between_cycles(cycles, nodes):
     new_cycles = copy.deepcopy(cycles)
+    
     first, second = new_cycles[0].index(nodes[0]), new_cycles[1].index(nodes[1])
     new_cycles[0][first], new_cycles[1][second] = new_cycles[1][second], new_cycles[0][first]
 
@@ -97,6 +98,9 @@ def exchange_nodes_between_cycles(cycles, nodes):
 def exchange_edge_in_cycle(cycle, edges):
     new_cycle = copy.deepcopy(cycle)
     first, second = new_cycle.index(edges[0]), new_cycle.index(edges[1])
+    # print(f"Swaping nodes: {edges}")
+    if first > second:
+        first, second = second, first
 
     if first == 0 and second == len(new_cycle) - 1:
         new_cycle[first], new_cycle[second] = new_cycle[second], new_cycle[first]
@@ -122,8 +126,11 @@ def greedy_one_epoch(cycles, distance_matrix, method):
             delta = delta_between_cycles_node_exchange(distance_matrix, cycles, nodes)
         
         if delta < 0:
-            if action == delta_inside_cycle_node_exchange or action == delta_inside_cycle_edge_exchange:
+            if action == delta_inside_cycle_node_exchange:
                 new_cycle = exchange_nodes_in_cycle(cycles[cycle_idx], nodes)
+                cycles[cycle_idx] = new_cycle
+            elif action == delta_inside_cycle_edge_exchange:
+                new_cycle = exchange_edge_in_cycle(cycles[cycle_idx], nodes)
                 cycles[cycle_idx] = new_cycle
             elif action == delta_between_cycles_node_exchange:
                 new_cycles = exchange_nodes_between_cycles(cycles, nodes)
@@ -157,14 +164,19 @@ def steepest_one_epoch(cycles, distance_matrix, method):
             delta = delta_inside_cycle_node_exchange(distance_matrix, cycles[cycle_idx], nodes)
         elif action == delta_inside_cycle_edge_exchange:
             delta = delta_inside_cycle_edge_exchange(distance_matrix, cycles[cycle_idx], nodes)
+            # print("delta_inside_cycle_edge_exchange", delta)
         elif action == delta_between_cycles_node_exchange:
             delta = delta_between_cycles_node_exchange(distance_matrix, cycles, nodes)
         
         if delta < best_delta:
             best_delta = delta
             
-            if action == delta_inside_cycle_node_exchange or action == delta_inside_cycle_edge_exchange:
+            if action == delta_inside_cycle_node_exchange:
                 new_cycle = exchange_nodes_in_cycle(cycles[cycle_idx], nodes)
+                single_cycle = True
+                best_cycle_idx = cycle_idx
+            elif action == delta_inside_cycle_edge_exchange:
+                new_cycle = exchange_edge_in_cycle(cycles[cycle_idx], nodes)
                 single_cycle = True
                 best_cycle_idx = cycle_idx
             elif action == delta_between_cycles_node_exchange:
