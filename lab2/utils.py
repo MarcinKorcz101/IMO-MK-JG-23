@@ -34,9 +34,13 @@ def prepare_plot_data(cycle1, cycle2, nodes):
     y = [nodes[i][1] for i in range(len(nodes))]
 
     first_cycle_x = [nodes[i][0] for i in cycle1]
+    first_cycle_x.append(nodes[cycle1[0]][0])
     first_cycle_y = [nodes[i][1] for i in cycle1]
+    first_cycle_y.append(nodes[cycle1[0]][1])
     second_cycle_x = [nodes[i][0] for i in cycle2]
+    second_cycle_x.append(nodes[cycle2[0]][0])
     second_cycle_y = [nodes[i][1] for i in cycle2]
+    second_cycle_y.append(nodes[cycle2[0]][1])
 
     return x, y, first_cycle_x, first_cycle_y, second_cycle_x, second_cycle_y
 

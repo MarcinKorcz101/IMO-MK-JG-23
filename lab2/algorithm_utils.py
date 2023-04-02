@@ -12,8 +12,10 @@ def calc_cycle_length(distance_matrix, cycle):
     cyc_len = 0.0
 
     for i in range(len(cycle)):
-        if i == len(cycle) - 1: cyc_len += distance_matrix[cycle[0]][cycle[-1]]
-        else: cyc_len += distance_matrix[cycle[i]][cycle[i + 1]]
+        if i == len(cycle) - 1: 
+            cyc_len += distance_matrix[cycle[0]][cycle[-1]]
+        else: 
+            cyc_len += distance_matrix[cycle[i]][cycle[i + 1]]
 
     return cyc_len
 
@@ -23,11 +25,10 @@ def calc_cycles_length(distance_matrix, cycles):
 def get_node_pair(cycles, action):
     possibilities = []
     for cycle_idx, cycle in enumerate(cycles):
-        # print(cycle_idx)
         for node1 in range(len(cycle)):
             for node2 in range(node1 + 1, len(cycle)):
                 possibilities.append(([cycle[node1], cycle[node2]], action, cycle_idx))
-    # print(possibilities)
+    
     return possibilities
 
 def get_between_cycles_node_pair(cycles, action):
@@ -50,10 +51,8 @@ def find_neighbour(cycle, first, second=None):
     return before_first_neighbour, after_first_neighbour
 
 def delta_inside_cycle_node_exchange(distance_matrix, cycle, nodes):
-    # print(cycle)
     first, second = nodes[0], nodes[1]
     before_first, after_first, before_second, after_second = find_neighbour(cycle, first, second)
-    # print(before_first, first, after_first,'|||', before_second,second, after_second)
 
     if before_second == first:
         return distance_matrix[before_first][second] + distance_matrix[first][after_second] - distance_matrix[before_first][first] - distance_matrix[second][after_second]
@@ -66,10 +65,8 @@ def delta_inside_cycle_node_exchange(distance_matrix, cycle, nodes):
     
 def delta_between_cycles_node_exchange(distance_matrix, cycles, nodes):
     first, second = nodes[0], nodes[1]
-    # print(first, second, ":::::",cycles)
     before_first, after_first = find_neighbour(cycles[0], first)
     before_second, after_second = find_neighbour(cycles[1], second)
-    # print(before_first, first, after_first, "|||", before_second, second, after_second)
 
     first_delta = distance_matrix[before_second][first] + distance_matrix[first][after_second] - distance_matrix[before_first][first] - distance_matrix[first][after_first]
     second_delta = distance_matrix[before_first][second] + distance_matrix[second][after_first] - distance_matrix[before_second][second] - distance_matrix[second][after_second]
@@ -98,7 +95,7 @@ def exchange_nodes_between_cycles(cycles, nodes):
 def exchange_edge_in_cycle(cycle, edges):
     new_cycle = copy.deepcopy(cycle)
     first, second = new_cycle.index(edges[0]), new_cycle.index(edges[1])
-    # print(f"Swaping nodes: {edges}")
+
     if first > second:
         first, second = second, first
 
@@ -143,28 +140,18 @@ def greedy_one_epoch(cycles, distance_matrix, method):
     return cycles
 
 def steepest_one_epoch(cycles, distance_matrix, method):
-    # for cycle_idx1, cycle in enumerate(cycles):
-    # cycle_length = calc_cycle_length(distance_matrix, cycle)
-
     possibilities = get_node_pair(cycles, method)
     possibilities.extend(get_between_cycles_node_pair(cycles, delta_between_cycles_node_exchange))
-    
-    # np.random.seed()
-    # np.random.shuffle(possibilities)
     
     best_delta = 0
     best_cycle_idx = 0
     single_cycle = None
     
-    # tmp_cycles = cycles.copy()
     for nodes, action, cycle_idx in possibilities:
-        # print(nodes, action, cycle_idx)
-
         if action == delta_inside_cycle_node_exchange:
             delta = delta_inside_cycle_node_exchange(distance_matrix, cycles[cycle_idx], nodes)
         elif action == delta_inside_cycle_edge_exchange:
             delta = delta_inside_cycle_edge_exchange(distance_matrix, cycles[cycle_idx], nodes)
-            # print("delta_inside_cycle_edge_exchange", delta)
         elif action == delta_between_cycles_node_exchange:
             delta = delta_between_cycles_node_exchange(distance_matrix, cycles, nodes)
         
@@ -183,50 +170,58 @@ def steepest_one_epoch(cycles, distance_matrix, method):
                 new_cycles = exchange_nodes_between_cycles(cycles, nodes)
                 single_cycle = False
             else:
-                # print("Fatal error")
                 ValueError("Fatal error")
 
-            # cycle_length = cycle_length + delta
-    # if single_cycle != None:
-    #     print("niefajnie")
     if single_cycle == True:
         cycles[best_cycle_idx] = new_cycle
     elif single_cycle == False:
         cycles = new_cycles
 
     return cycles
+
+def random_one_epoch(cycles, distance_matrix, method):
+    possibilities = get_node_pair(cycles, method)
+    possibilities.extend(get_between_cycles_node_pair(cycles, delta_between_cycles_node_exchange))
     
-# def inside_cycle_edge_exchange(cycles, distance_matrix):
-#     for cycle_idx, cycle in enumerate(cycles):
-#         new_cycle = cycle
-#         cycle_length = calc_cycle_length(distance_matrix, cycle)
-#         possibilities = get_node_pair(cycle)
+    best_delta = 0
+    best_cycle_idx = 0
+    single_cycle = None
+    
+    np.random.seed()
+    np.random.shuffle(possibilities)
 
-#         np.random.seed()
-#         np.random.shuffle(possibilities)
-#         for nodes in possibilities:
-#             delta = delta_inside_cycle_edge_exchange(distance_matrix, cycle, nodes)
-#             if delta < 0:
-#                 new_cycle = exchange_edge_in_cycle(cycle, nodes)
-#                 # print("Exchange for nodes ", nodes)
-#                 cycle_length = cycle_length + delta
-#                 break
+    for nodes, action, cycle_idx in possibilities:
+        print("jestem")
+        # if action == delta_inside_cycle_node_exchange:
+        #     delta = delta_inside_cycle_node_exchange(distance_matrix, cycles[cycle_idx], nodes)
+        # elif action == delta_inside_cycle_edge_exchange:
+        #     delta = delta_inside_cycle_edge_exchange(distance_matrix, cycles[cycle_idx], nodes)
+        # elif action == delta_between_cycles_node_exchange:
+        #     delta = delta_between_cycles_node_exchange(distance_matrix, cycles, nodes)
+        
+        # if delta < best_delta:
+        #     best_delta = delta
 
-#         cycles[cycle_idx] = new_cycle
-#     return cycles
+        if action == delta_inside_cycle_node_exchange:
+            new_cycle = exchange_nodes_in_cycle(cycles[cycle_idx], nodes)
+            single_cycle = True
+            best_cycle_idx = cycle_idx
+        elif action == delta_inside_cycle_edge_exchange:
+            new_cycle = exchange_edge_in_cycle(cycles[cycle_idx], nodes)
+            single_cycle = True
+            best_cycle_idx = cycle_idx
+        elif action == delta_between_cycles_node_exchange:
+            new_cycles = exchange_nodes_between_cycles(cycles, nodes)
+            single_cycle = False
+        else:
+            ValueError("Fatal error")
+            # break
 
-# def between_cycle_node_exchange(cycles, distance_matrix):
-#     new_cycles = cycles
-#     cycles_length = calc_cycle_length(distance_matrix, cycles[0]) + calc_cycle_length(distance_matrix, cycles[1])
-#     possibilities = get_between_cycles_node_pair(cycles)
-#     np.random.seed()
-#     np.random.shuffle(possibilities)
-#     for nodes in possibilities:
-#         delta = delta_between_cycles_node_exchange(distance_matrix, cycles, nodes)
-#         if delta < 0:
-#             new_cycles = exchange_nodes_between_cycles(cycles, nodes)
-#             # print("Exchange for nodes ", nodes)
-#             cycles_length = cycles_length + delta
-#             break
+        break
 
-#     return new_cycles
+    if single_cycle == True:
+        cycles[best_cycle_idx] = new_cycle
+    elif single_cycle == False:
+        cycles = new_cycles
+
+    return cycles
