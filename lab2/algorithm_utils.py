@@ -192,6 +192,16 @@ def random_one_epoch(cycles, distance_matrix, method):
     
     for nodes, action, cycle_idx in possibilities:
         if action == delta_inside_cycle_node_exchange:
+            delta = delta_inside_cycle_node_exchange(distance_matrix, cycles[cycle_idx], nodes)
+        elif action == delta_inside_cycle_edge_exchange:
+            delta = delta_inside_cycle_edge_exchange(distance_matrix, cycles[cycle_idx], nodes)
+        elif action == delta_between_cycles_node_exchange:
+            delta = delta_between_cycles_node_exchange(distance_matrix, cycles, nodes)
+        
+        if delta >= 0:
+            break
+
+        if action == delta_inside_cycle_node_exchange:
             new_cycle = exchange_nodes_in_cycle(cycles[cycle_idx], nodes)
             single_cycle = True
             best_cycle_idx = cycle_idx
@@ -204,7 +214,6 @@ def random_one_epoch(cycles, distance_matrix, method):
             single_cycle = False
         else:
             ValueError("Fatal error")
-
         break
 
     if single_cycle == True:

@@ -67,3 +67,4 @@ def save_result(title, cycle1, cycle2, nodes):
     ax.set_title(title)
     # plt.show()
     plt.savefig(f"plots/{title}.png")
+    plt.close()

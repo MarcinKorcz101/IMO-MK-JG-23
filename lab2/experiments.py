@@ -12,7 +12,7 @@ def run_experiments(N=100):
     # algorithms[0], algorithms[1] = algorithms[1], algorithms[0]
     starting_points = ['random_starting_solution', 'regret_starting_solution']
     times_2 = []
-    with open('results_lab2.txt', 'w') as results_file:
+    with open('results_lab2_test.txt', 'w') as results_file:
         for starting_point in tqdm(starting_points):
             for algorithm, name_algorithm in tqdm(algorithms):
                 for method, method_name in methods:
@@ -54,6 +54,7 @@ def run_experiments(N=100):
                         save_result(f"{starting_point}-{name_algorithm}-{method_name}-{instance.split('.')[0]}", best_cycle[0], best_cycle[1], nodes)
         max_time = np.max(times_2)
         print(f"Max time: {max_time}")
+        max_time = 2.16303
         for starting_point in tqdm(starting_points):
             for method, method_name in methods:
                 for instance in instances:
@@ -80,10 +81,10 @@ def run_experiments(N=100):
                         start = time.time()
                         while time.time() - start < max_time:
                             cycles = random_one_epoch(cycles, distance_matrix, method)
-                            # new_len = calc_cycles_length(distance_matrix, cycles)
-                            # if old_len - new_len < 0.0001:
-                            #     improvement = False
-                            # old_len = new_len
+                            new_len = calc_cycles_length(distance_matrix, cycles)
+                            if old_len - new_len < 0.0001:
+                                improvement = False
+                            old_len = new_len
                         times.append(time.time() - start)
                         results_in_scope.append(calc_cycles_length(distance_matrix, cycles))
 
@@ -95,4 +96,4 @@ def run_experiments(N=100):
                     save_result(f"{starting_point}-{'Random_walk'}-{method_name}-{instance.split('.')[0]}", best_cycle[0], best_cycle[1], nodes)
                     
 if __name__ == '__main__':
-    run_experiments(5)
+    run_experiments(100)
