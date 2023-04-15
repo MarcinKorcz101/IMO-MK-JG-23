@@ -1,0 +1,1 @@
+# Ocena ruchów z poprzednich iteracji
