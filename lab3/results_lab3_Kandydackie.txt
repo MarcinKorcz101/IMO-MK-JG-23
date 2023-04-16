@@ -1,0 +1,2 @@
+Ruchy kandydatckie	kroA200.tsp	 = 40794.64 (38112.0 - 44405.0) | 2.91 (2.45 - 3.68)
+Ruchy kandydatckie	kroB200.tsp	 = 41073.55 (38184.0 - 45402.0) | 2.94 (2.47 - 3.67)

@@ -62,11 +62,22 @@ def delta_inside_cycle_node_exchange(distance_matrix, cycle, nodes):
         first_delta = distance_matrix[before_second][first] + distance_matrix[first][after_second] - distance_matrix[before_first][first] - distance_matrix[first][after_first]
         second_delta = distance_matrix[before_first][second] + distance_matrix[second][after_first] - distance_matrix[before_second][second] - distance_matrix[second][after_second]
         return first_delta + second_delta
-    
+
+
+def find_cycle_idx(cycles, node):
+    for i in range(len(cycles)):
+        if node in cycles[i]:
+            return i
+    return None
+
 def delta_between_cycles_node_exchange(distance_matrix, cycles, nodes):
     first, second = nodes[0], nodes[1]
-    before_first, after_first = find_neighbour(cycles[0], first)
-    before_second, after_second = find_neighbour(cycles[1], second)
+    first_cycle_idx = find_cycle_idx(cycles, first)
+    second_cycle_idx = find_cycle_idx(cycles, second)
+    
+
+    before_first, after_first = find_neighbour(cycles[first_cycle_idx], first)
+    before_second, after_second = find_neighbour(cycles[second_cycle_idx], second)
 
     first_delta = distance_matrix[before_second][first] + distance_matrix[first][after_second] - distance_matrix[before_first][first] - distance_matrix[first][after_first]
     second_delta = distance_matrix[before_first][second] + distance_matrix[second][after_first] - distance_matrix[before_second][second] - distance_matrix[second][after_second]
@@ -89,6 +100,7 @@ def exchange_nodes_between_cycles(cycles, nodes):
     
     first, second = new_cycles[0].index(nodes[0]), new_cycles[1].index(nodes[1])
     new_cycles[0][first], new_cycles[1][second] = new_cycles[1][second], new_cycles[0][first]
+    print("done ")
 
     return new_cycles
 

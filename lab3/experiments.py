@@ -5,11 +5,13 @@ from tqdm import tqdm
 import numpy as np
 import time
 from candidates import candidates_moves
+from moves_rate import moves_rate
 
-def run_experiments(N=100):
+def run_experiments(N=1):
     instances = ['kroA200.tsp', 'kroB200.tsp']
     algorithms = [(candidates_moves, 'Ruchy kandydatckie')]
-    with open('results_lab3_test.txt', 'w') as results_file:
+    algorithms = [(moves_rate, 'Lokalne przeszukiwanie')]
+    with open('results_lab3_moves.txt', 'w') as results_file:
         for algorithm, name_algorithm in algorithms:
             for instance in instances:
 
@@ -41,4 +43,4 @@ def run_experiments(N=100):
 
 
 if __name__ == '__main__':
-    run_experiments(100)
+    run_experiments(10)
