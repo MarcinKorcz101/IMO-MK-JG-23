@@ -100,7 +100,7 @@ def exchange_nodes_between_cycles(cycles, nodes):
     
     first, second = new_cycles[0].index(nodes[0]), new_cycles[1].index(nodes[1])
     new_cycles[0][first], new_cycles[1][second] = new_cycles[1][second], new_cycles[0][first]
-    print("done ")
+    # print("done ")
 
     return new_cycles
 

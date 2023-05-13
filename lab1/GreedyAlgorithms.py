@@ -53,6 +53,18 @@ class GreedyAlgorithms:
         ax.set_title(title)
         plt.show()
 
+    def save_result(self, title):
+        x, y, first_cycle_x, first_cycle_y, second_cycle_x, second_cycle_y = self.prepare_plot_data()
+        fig, ax = plt.subplots()
+        ax.scatter(x, y, color='black')
+        ax.set_xlabel("X coordinates")
+        ax.set_ylabel("Y coordinates")
+        ax.plot(first_cycle_x, first_cycle_y, 'blue')
+        ax.plot(second_cycle_x, second_cycle_y, 'red')
+        ax.set_title(title)
+        plt.savefig(f"{title}.png")
+        plt.close()
+
     def calc_distance_matrix(self):
         self.distance_matrix = np.zeros(shape=(self.N, self.N)).tolist()
 
@@ -61,7 +73,7 @@ class GreedyAlgorithms:
                 d = np.sqrt((self.nodes[i].x - self.nodes[j].x) ** 2 + (self.nodes[i].y - self.nodes[j].y) ** 2)
                 self.distance_matrix[i][j] = self.distance_matrix[j][i] = np.round(d)
 
-        print(self.distance_matrix)
+        # print(self.distance_matrix)
 
     def calc_cycle_length(self, cycle):
         cyc_len = 0.0
@@ -85,7 +97,7 @@ class GreedyAlgorithms:
                     max_distance = distance
                     b = node
                     
-        a, b = 84, 69
+        # a, b = 84, 69
         self.first_cycle = [a]
         self.second_cycle = [b]
         return a, b
@@ -124,6 +136,7 @@ class GreedyAlgorithms:
     def nearest_regret_node(self, node, nodes_in_cycles, cycle):
         new_node = None
         min_distance = np.Inf
+        new_node, new_position = None, None
 
         for n in range(self.N):
             if n != node and n not in nodes_in_cycles:
@@ -139,6 +152,7 @@ class GreedyAlgorithms:
                     new_node = n
                     new_position = position
 
+        print(len(nodes_in_cycles))
         return new_node, new_position
 
     def nearest_node(self, node, used_nodes):
@@ -222,20 +236,23 @@ class GreedyAlgorithms:
     def regret_greedy(self, nodes_in_cycles, last_first_nearest_node, last_second_nearest_node):
         for _ in range(int(self.N / 2) - 1):
             first_nearest_node, ins = self.nearest_regret_node(last_first_nearest_node, nodes_in_cycles, self.first_cycle)
-            self.first_cycle.insert(ins, first_nearest_node)
-            nodes_in_cycles.append(first_nearest_node)
+            if first_nearest_node is not None:
+                self.first_cycle.insert(ins, first_nearest_node)
+                nodes_in_cycles.append(first_nearest_node)
 
             second_nearest_node, ins2 = self.nearest_regret_node(last_second_nearest_node, nodes_in_cycles, self.second_cycle)
-            self.second_cycle.insert(ins2, second_nearest_node)
-            nodes_in_cycles.append(second_nearest_node)
+            if second_nearest_node is not None:
+                self.second_cycle.insert(ins2, second_nearest_node)
+                nodes_in_cycles.append(second_nearest_node)
 
-            last_first_nearest_node = first_nearest_node
-            last_second_nearest_node = second_nearest_node
+            if first_nearest_node is not None: last_first_nearest_node = first_nearest_node
+            if second_nearest_node is not None: last_second_nearest_node = second_nearest_node
 
         if self.N % 2 == 1:
-            first_nearest_node = self.nearest_node(last_first_nearest_node, nodes_in_cycles)
-            nodes_in_cycles.append(first_nearest_node)
-            self.add_to_cycle(first_nearest_node, 1)
+            if first_nearest_node is not None:
+                first_nearest_node = self.nearest_node(last_first_nearest_node, nodes_in_cycles)
+                nodes_in_cycles.append(first_nearest_node)
+                self.add_to_cycle(first_nearest_node, 1)
 
         if self.show_plot: self.plot_result("Cycles created with the Two Regret approach for krob100 instance")
         total_distance = self.calc_cycle_length(self.first_cycle) + self.calc_cycle_length(self.second_cycle)

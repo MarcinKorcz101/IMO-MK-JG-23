@@ -2,6 +2,21 @@ from matplotlib import pyplot as plt
 import numpy as np
 import json
 
+def calc_cycle_length(distance_matrix, cycle):
+    cyc_len = 0.0
+    # print(cycle)
+    for i in range(len(cycle)):
+        # print(i)
+        if i == len(cycle) - 1: 
+            cyc_len += distance_matrix[cycle[0]][cycle[-1]]
+        else: 
+            cyc_len += distance_matrix[cycle[i]][cycle[i + 1]]
+
+    return cyc_len
+
+def calc_cycles_length(distance_matrix, cycles):
+    return calc_cycle_length(distance_matrix, cycles[0]) + calc_cycle_length(distance_matrix, cycles[1])
+
 def calc_distance_matrix(nodes):
     N = len(nodes)
     distance_matrix = np.zeros(shape=(N, N)).tolist()
@@ -18,7 +33,6 @@ def read_file(name):
         for i, line in enumerate(file):
             if line == "EOF\n": break
             if i >= 6:
-                # print(line)
                 _, x, y = line.split()
                 nodes.append([int(x), int(y)])
 
