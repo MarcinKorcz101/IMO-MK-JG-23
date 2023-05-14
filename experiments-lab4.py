@@ -7,10 +7,10 @@ from lab4.candidates_rework import candidates_moves_reworked
 from lab4.MSLS import MSLS
 from lab4.ILS import ils1, ils2
 
-def run_experiments(N=100):
+def run_experiments(N=10):
     instances = ['kroA200.tsp', 'kroB200.tsp']
-    algorithms = [(MSLS, 'MSLS')]
-    algorithms = [(MSLS, 'MSLS'), (ils1, 'ILS1')]
+    # algorithms = [(MSLS, 'MSLS')]
+    # algorithms = [(MSLS, 'MSLS'), (ils1, 'ILS1')]
     algorithms = [(ils2, 'ILS2')]
     # algorithms = [(candidates_moves_reworked, 'Ruchy kandydatckie')]
     with open('results_lab4_lokalne_przeszukiwanie.txt', 'w') as results_file:
