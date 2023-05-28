@@ -138,7 +138,7 @@ def evolutionary(distance_matrix, instance):
 
                 weak_improvement = False
                 for solution in population:
-                    if abs(current_len - solution[1]) < 40:
+                    if abs(current_len - solution[1]) < 30:
                         weak_improvement = True
                         break
 
